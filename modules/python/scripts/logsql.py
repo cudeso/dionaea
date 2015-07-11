@@ -59,6 +59,7 @@ class logsqlhandler(ihandler):
 		self.cursor.execute("""CREATE TABLE IF NOT EXISTS 
 			connections	(
 				connection INTEGER PRIMARY KEY,
+				id INTEGER,
 				connection_type TEXT, 
 				connection_transport TEXT, 
 				connection_protocol TEXT, 
@@ -583,6 +584,9 @@ class logsqlhandler(ihandler):
 				self.cursor.execute("UPDATE connections SET connection_root = ? WHERE connection_root = ?",
 					(attackid, i ) )
 			self.dbh.commit()
+
+		# Set the ID table ready for Logstash
+        self.cursor.execute("UPDATE connections SET id = ? WHERE connection = ?", (attackid, attackid) )
 
 		return attackid
 
